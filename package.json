@@ -1,0 +1,37 @@
+{
+  "name": "tty-wrap",
+  "version": "1.0.0",
+  "description": "Wrap text on terminal.",
+  "main": "src/wrap.js",
+  "scripts": {
+    "cover": "rm -rf ./coverage && istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec --compilers js:babel/register test/test-*",
+    "test": "mocha --compilers js:babel/register test/test-*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qiu8310/tty-wrap.git"
+  },
+  "keywords": [
+    "wrap",
+    "tty",
+    "terminal",
+    "text",
+    "charaset",
+    "cli"
+  ],
+  "author": "Mora",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qiu8310/tty-wrap/issues"
+  },
+  "homepage": "https://github.com/qiu8310/tty-wrap#readme",
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "mocha": "^2.3.3",
+    "should": "^7.1.0"
+  },
+  "dependencies": {
+    "tty-size": "^1.0.0",
+    "tty-text": "^1.0.0"
+  }
+}
