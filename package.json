@@ -1,7 +1,7 @@
 {
   "name": "tty-wrap",
-  "version": "1.0.0",
-  "description": "Wrap text on terminal.",
+  "version": "0.0.1",
+  "description": "Wrap text on terminal, support East Asian Character, Combinint Marks and Surrogate Pairs.",
   "main": "src/wrap.js",
   "scripts": {
     "cover": "rm -rf ./coverage && istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec --compilers js:babel/register test/test-*",
@@ -15,9 +15,14 @@
     "wrap",
     "tty",
     "terminal",
+    "table",
+    "cell",
     "text",
-    "charaset",
-    "cli"
+    "unicode",
+    "East Asian",
+    "Combining Marks",
+    "Surrogate Pairs"
+    "charaset"
   ],
   "author": "Mora",
   "license": "MIT",
@@ -31,7 +36,8 @@
     "should": "^7.1.0"
   },
   "dependencies": {
+    "chalk": "^1.1.1",
     "tty-size": "^1.0.0",
-    "tty-text": "^1.0.0"
+    "tty-text": "^1.0.1"
   }
 }

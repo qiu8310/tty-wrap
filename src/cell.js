@@ -55,7 +55,5 @@ function cell(text, opts = {}) {
   return wrap(text, opts);
 }
 
-wrap.cell = cell;
-
-export default wrap;
+export default cell;
 
