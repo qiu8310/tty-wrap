@@ -1,3 +1,5 @@
+require('es6-shim');
+
 import ttyText from 'tty-text';
 import punycode from 'punycode';
 import {detected} from './detectSize';

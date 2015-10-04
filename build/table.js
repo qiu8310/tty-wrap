@@ -20,6 +20,8 @@ var _ttySize = require('tty-size');
 
 var _ttySize2 = _interopRequireDefault(_ttySize);
 
+require('es6-shim');
+
 var defaultStyles = {
   color: '',
   ellipsis: ' ...',

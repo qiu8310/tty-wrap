@@ -32,6 +32,8 @@ var _chalk = require('chalk');
 
 var _chalk2 = _interopRequireDefault(_chalk);
 
+require('es6-shim');
+
 _wrap2['default'].tt = _ttyText2['default'];
 _wrap2['default'].ts = _ttySize2['default'];
 _wrap2['default'].chalk = _chalk2['default'];

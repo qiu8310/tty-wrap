@@ -1,12 +1,12 @@
 {
   "name": "tty-wrap",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Wrap text on terminal, support East Asian Character, Combinint Marks and Surrogate Pairs.",
   "main": "build/index.js",
   "scripts": {
     "cover": "rm -rf ./coverage && istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec --compilers js:babel/register test/test-*",
     "test": "mocha --compilers js:babel/register test/test-*",
-    "build": "babel src -d build && echo '{}' > data/cache.json"
+    "build": "babel -e 0 src -d build && echo '{}' > data/cache.json"
   },
   "repository": {
     "type": "git",
@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "chalk": "^1.1.1",
+    "es6-shim": "^0.33.6",
     "tty-size": "^1.0.0",
     "tty-text": "^1.0.1"
   }

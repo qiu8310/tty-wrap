@@ -1,8 +1,9 @@
+require('es6-shim');
+
 import wrap from './wrap';
 import table from './table';
 import cell from './cell';
 import {detectSize} from './detectSize';
-
 
 import tt from 'tty-text';
 import ts from 'tty-size';

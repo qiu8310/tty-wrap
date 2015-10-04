@@ -24,6 +24,8 @@ var _os = require('os');
 
 var _os2 = _interopRequireDefault(_os);
 
+require('es6-shim');
+
 var EOL = _os2['default'].EOL;
 
 // Refer from `ansi-regex` npm package

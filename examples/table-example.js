@@ -1,5 +1,5 @@
-import table from '../src/table';
-import chalk from 'chalk';
+var table = require('../build/table');
+var chalk = require('chalk');
 
 
 table(
@@ -39,4 +39,4 @@ table(
       color: 'bgWhite.black'
     }
   }
-)
+);

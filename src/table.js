@@ -1,6 +1,9 @@
+require('es6-shim');
+
 import wrap from './wrap';
 import chalk from 'chalk';
 import ttySize from 'tty-size';
+
 
 let defaultStyles = {
   color: '',

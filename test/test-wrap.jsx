@@ -1,7 +1,8 @@
 
-import wrap from '../src/wrap.js';
+import wrap from '../';
 import assert from 'assert';
 import should from 'should';
+
 
 let strip = (str) => str.replace(wrap.ANSI_REGEXP, '');
 let test = (str, opts, width, height, lastWidth, stripped) => {

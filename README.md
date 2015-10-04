@@ -184,8 +184,8 @@ wrap.table(
 
 ## Examples
 
-* [`wrap.cell` example](./examples/ex-cell.js);
-* [`wrap.tabel` example](./examples/ex-table.js);
+* [`wrap.cell` example](./examples/cell-example.js);
+* [`wrap.tabel` example](./examples/table-example.js);
 
 
 

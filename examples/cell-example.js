@@ -1,8 +1,8 @@
-let cell = require('../src/cell');
-let r;
+var cell = require('../build/cell');
+var r;
 
 
-let B1 = '\x1B[44m', B2 = '\x1B[41m', R = '\x1B[m', F1 = '\x1B[31m';
+var B1 = '\x1B[44m', B2 = '\x1B[41m', R = '\x1B[m', F1 = '\x1B[31m';
 
 console.log('\n--------------- TAB 出现在换行处 -----------------');
 r = cell(`${B1}\uD83D\uDCA9 23${F1}4567${R}89\t中789`, {left: 10, width: 10});
