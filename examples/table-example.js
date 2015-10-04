@@ -17,6 +17,7 @@ table(
     showLeadOnRight: false,
     border: 'simple',
     colSort: ['user', 'age', 'desc'],
+    console: 'log'
   },
 
   {

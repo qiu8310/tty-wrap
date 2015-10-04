@@ -1,34 +1,5 @@
 import wrap from './wrap';
-
-import ttySize from 'tty-size';
-
-// 参数检查
-function _cellOptsCheck(opts) {
-  let winSize = ttySize(); // 每次都重复计算，因为用户可以手动调整屏幕大小
-
-  // 参数 自动从 detected 中获取，如果设置了默认的，则无法从 detected 中获取
-  // opts.tabsize = opts.tabsize || 8;
-  // opts.ambsize = opts.ambsize || 1;
-
-  ['left', 'right', 'width'].forEach((k, i) => {
-    let v = opts[k];
-    let intV = parseInt(v, 10);
-    if (typeof v === 'string' && /^\d+%$/.test(v)) {
-      opts[k] = Math.round(winSize.width * intV / 100);
-    } else if (!isNaN(intV) && intV > 0) {
-      opts[k] = intV;
-    } else {
-      opts[k] = i < 2 ? 0 : winSize.width - opts.left - opts.right;
-    }
-  });
-
-  // 验证
-  if (opts.left + opts.right + opts.width > winSize.width)
-    throw new Error('left + right + width value should less or equal then ternimal\'s width.');
-
-  // 生成新的配置项
-  opts.prefix = wrap.CSI + opts.left + 'C';
-}
+import helper from './helper';
 
 /**
  * Wrap Text
@@ -51,7 +22,17 @@ function _cellOptsCheck(opts) {
  */
 function cell(text, opts = {}) {
 
-  _cellOptsCheck(opts);
+  // 参数 自动从 detected 中获取，如果设置了默认的，则无法从 detected 中获取
+  // opts.tabsize = opts.tabsize || 8;
+  // opts.ambsize = opts.ambsize || 1;
+
+  // 检查并设置 left, right, width
+  helper.checkLRW(opts);
+
+  // 生成新的配置项
+  opts.prefix = wrap.CSI + opts.left + 'C';
+
+
   return wrap(text, opts);
 }
 

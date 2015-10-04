@@ -114,8 +114,19 @@ wrap.table(
 |  colFilter        | {Array|Function}|  列过滤    | 
 |  rowSort          | {Array|Function}|  行排序    | 
 |  colSort          | {Array|Function}|  列排序    | 
-|  left             | {Number}        |  向左缩进     | 
+|  left             | {Number|String} |  向左缩进，比如: 3, '%10'    | 
+|  right            | {Number|String} |  向右缩进     | 
+|  width            | {Number|String} |  指定表格整体的宽度     | 
+|  autoWrapOnCol    | {String}        |  如果限定了 width 或 right，则必须有一列是可以自动申缩的，用此参数指定，没指定默认取最后一列  | 
+|  console          | {String|Boolean}|  是否输出生成的内容，如果输出并可以指定要使用的 console 中的方法 |
 
+
+ *   - left:          {Number|String}    整数或者百分比（相对当前屏幕），如: 2, '20%'
+ *   - right:         {Number}
+ *   - width:         {Number}
+ *   - autoWrapOnCol: {String}           
+ *   - console        {String|Boolean}   是否输出生成的内容，如果输出并可以指定要使用的 console 中的方法
+ *
 
  **`style`**: 样式配置
 

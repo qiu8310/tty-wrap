@@ -14,9 +14,17 @@ var _wrap = require('./wrap');
 
 var _wrap2 = _interopRequireDefault(_wrap);
 
+var _helper = require('./helper');
+
+var _helper2 = _interopRequireDefault(_helper);
+
 var _chalk = require('chalk');
 
 var _chalk2 = _interopRequireDefault(_chalk);
+
+var _os = require('os');
+
+var _os2 = _interopRequireDefault(_os);
 
 require('es6-shim');
 
@@ -214,7 +222,11 @@ function _caculateCellStyle(i, j, val, rowCount, colCount, opts, common, style) 
     return style[k];
   });
 
-  return _getCommonStyle(Object.assign.apply(Object, [{}, common].concat(_toConsumableArray(styles))));
+  var s = _getCommonStyle(Object.assign.apply(Object, [{}, common].concat(_toConsumableArray(styles))));
+
+  s.padding = _d4(s.padding, s);
+
+  return s;
 }
 
 function _caculateTableStyle(data, opts, style) {
@@ -243,29 +255,55 @@ function _applyColor(colors, val) {
 }
 
 // 计算表格每个单元的带样式的内容
-function _caculateTableContent(data, style, maxRowHeights, maxColWidths) {
+function _caculateTableContent(data, style, maxRowHeights, maxColWidths, opts) {
+  // 如果限制了宽度
+  var autoWrapOnCol = undefined,
+      columns = data[0] && data[0].length || 0;
+  if (opts.width) {
+    if (opts.autoWrapOnCol) autoWrapOnCol = opts.autoWrapOnCol.toUpperCase().charCodeAt(0) - 65;else autoWrapOnCol = columns - 1;
+  }
+
+  var max = function max(i, j, width) {
+    var s = style[i][j];
+
+    // 取出 ellipsis tabsize width 值传入 wrap
+    var wrapOpts = { ellipsis: s.ellipsis, tabsize: s.tabsize, width: width || s.width };
+
+    var c = (0, _wrap2['default'])(data[i][j] == null ? '' : data[i][j].toString(), wrapOpts);
+
+    var v = c.height + s.padding.top + s.padding.bottom;
+    if (!maxRowHeights[i]) maxRowHeights[i] = v;else maxRowHeights[i] = Math.max(maxRowHeights[i], v);
+
+    v = c.width + s.padding.left + s.padding.right;
+    if (!maxColWidths[j]) maxColWidths[j] = v;else maxColWidths[j] = Math.max(maxColWidths[j], v);
+
+    return c;
+  };
+
   var row = undefined,
-      c = undefined,
-      s = undefined,
-      v = undefined,
       content = [];
   for (var i = 0; i < data.length; i++) {
     row = [];
     for (var j = 0; j < data[i].length; j++) {
-      s = style[i][j];
-      s.padding = _d4(s.padding, s);
-
-      c = (0, _wrap2['default'])(data[i][j] == null ? '' : data[i][j].toString(), s);
-      row.push(c);
-
-      v = c.height + s.padding.top + s.padding.bottom;
-      if (!maxRowHeights[i]) maxRowHeights[i] = v;else maxRowHeights[i] = Math.max(maxRowHeights[i], v);
-
-      v = c.width + s.padding.left + s.padding.right;
-      if (!maxColWidths[j]) maxColWidths[j] = v;else maxColWidths[j] = Math.max(maxColWidths[j], v);
+      if (opts.width && j === autoWrapOnCol) {
+        row.push(''); // 传个假数据去占位，之后再修改回来
+      } else {
+        row.push(max(i, j));
+      }
     }
     content.push(row);
   }
+
+  if (opts.width && autoWrapOnCol >= 0 && autoWrapOnCol < columns) {
+    var width = opts.width - 1 - (opts.border ? columns + 1 : 0);
+    data.forEach(function (d, i) {
+      width -= maxColWidths[i] || 0;
+    });
+    for (var i = 0; i < data.length; i++) {
+      content[i][autoWrapOnCol] = max(i, autoWrapOnCol, width);
+    }
+  }
+
   return content;
 }
 
@@ -324,17 +362,22 @@ function _formatCell(c, s, maxWidth, maxHeight) {
  *   - head       {Array}
  *   - lead       {Array}
  *   - leadHead   {String}
- *   - showHead     {Boolean} 是否显示表头，默认不显示，如果 opts 中指定了 head = []，则此值默认值自动更新为 true
- *   - showLead     {Boolean}  是否显示表左侧的索引，和表头类似
+ *   - showHead   {Boolean} 是否显示表头，默认不显示，如果 opts 中指定了 head = []，则此值默认值自动更新为 true
+ *   - showLead   {Boolean}  是否显示表左侧的索引，和表头类似
  *   - showHeadOnBottom {Boolean}   是否将表头显示在最下面
  *   - showLeadOnRight  {Boolean}   是否将表索引显示在最右边
- *   - border     {String|Object}   预先定义好的 chars 组合 或自定义，参考 {@link https://github.com/Automattic/cli-table cli-table}
- *   - borderColor {String}         'gray'
- *   - rowFilter {Array|Function}
- *   - colFilter {Array|Function}
- *   - rowSort   {Array|Function}
- *   - colSort   {Array|Function}
- *   - left:     {Number}           0
+ *   - border         {String|Object}   预先定义好的 chars 组合 或自定义，参考 {@link https://github.com/Automattic/cli-table cli-table}
+ *   - borderColor    {String}         'gray'
+ *   - rowFilter      {Array|Function}
+ *   - colFilter      {Array|Function}
+ *   - rowSort        {Array|Function}
+ *   - colSort        {Array|Function}
+ *
+ *   - left:          {Number|String}    整数或者百分比（相对当前屏幕），如: 2, '20%'
+ *   - right:         {Number}
+ *   - width:         {Number}
+ *   - autoWrapOnCol: {String}           如果限定了 width 或 right，则必须有一列是可以自动申缩的，用此参数指定，没指定默认取最后一列
+ *   - console        {String|Boolean}   是否输出生成的内容，如果输出并可以指定要使用的 console 中的方法
  *
  *
  * @param {Object} [style = {}] - table style
@@ -354,17 +397,18 @@ function _formatCell(c, s, maxWidth, maxHeight) {
  *
  */
 function table(data) {
-  var opts = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-  var style = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+  var opts = arguments[1] === undefined ? {} : arguments[1];
+  var style = arguments[2] === undefined ? {} : arguments[2];
 
   _checkBorder(opts);
+  _helper2['default'].checkLRW(opts);
   data = _makeTableData(data, opts);
   style = _caculateTableStyle(data, opts, style);
 
   // 每行中最大的高度, 每列中最大的宽度
   var maxRowHeights = [],
       maxColWidths = [];
-  var content = _caculateTableContent(data, style, maxRowHeights, maxColWidths);
+  var content = _caculateTableContent(data, style, maxRowHeights, maxColWidths, opts);
 
   var maxHeight = undefined,
       maxWidth = undefined,
@@ -409,9 +453,14 @@ function table(data) {
     }
   }
 
-  rows.forEach(function (r, i) {
-    console.log(' '.repeat(opts.left || 0) + r);
+  if (opts.left > 0) rows = rows.map(function (r) {
+    return ' '.repeat(opts.left) + r;
   });
+
+  rows = rows.join(_os2['default'].EOL);
+  if (opts.console) console[opts.console in console ? opts.console : 'log'](rows);
+
+  return rows;
 }
 
 function _borderRow(v, chars, maxColWidths) {
