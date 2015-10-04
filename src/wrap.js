@@ -34,7 +34,7 @@ class Ansi {
 
     // 如果存在的话， 去掉最后一个多余的 ';'
     if (paramaters[paramaters.length - 1] === ';') paramaters = paramaters.slice(0, -1);
-    this.paramaters = paramaters.split(';')
+    this.paramaters = paramaters.split(';');
 
     this.trailingChar = trailingChar;
     this.index = index;

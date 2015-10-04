@@ -1,3 +1,5 @@
+/*eslint no-loop-func: 0*/
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -15,10 +17,6 @@ var _wrap2 = _interopRequireDefault(_wrap);
 var _chalk = require('chalk');
 
 var _chalk2 = _interopRequireDefault(_chalk);
-
-var _ttySize = require('tty-size');
-
-var _ttySize2 = _interopRequireDefault(_ttySize);
 
 require('es6-shim');
 

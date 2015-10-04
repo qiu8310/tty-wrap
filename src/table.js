@@ -1,8 +1,9 @@
+/*eslint no-loop-func: 0*/
+
 require('es6-shim');
 
 import wrap from './wrap';
 import chalk from 'chalk';
-import ttySize from 'tty-size';
 
 
 let defaultStyles = {
@@ -120,7 +121,7 @@ function _makeTableData(data, opts) {
     head = headKeys;
   }
 
-  let cols = headKeys.map((k, i) => { return {label: head[i], data: rows.map(row => row.data[k])} });
+  let cols = headKeys.map((k, i) => { return {label: head[i], data: rows.map(row => row.data[k])}; });
 
   if (colFilter) cols = _applyFilter(colFilter, cols);
   if (colSort) cols = _applySort(colSort, cols);
@@ -239,8 +240,8 @@ function _formatCell(c, s, maxWidth, maxHeight) {
   if (vertical === 'bottom') {
     top += d;
   } else if (vertical === 'middle') {
-    top += Math.floor(d/2);
-    bottom += Math.ceil(d/2);
+    top += Math.floor(d / 2);
+    bottom += Math.ceil(d / 2);
   } else {
     bottom += d;
   }
@@ -252,8 +253,8 @@ function _formatCell(c, s, maxWidth, maxHeight) {
     if (align === 'right') {
       l += d;
     } else if (align === 'center') {
-      l += Math.floor(d/2);
-      r += Math.ceil(d/2);
+      l += Math.floor(d / 2);
+      r += Math.ceil(d / 2);
     } else {
       r += d;
     }
