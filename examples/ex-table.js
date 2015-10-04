@@ -15,7 +15,7 @@ table(
     leadHead: 'Perple',
     lead: ['1', '2'],
     showLeadOnRight: false,
-    border: 'single',
+    border: 'simple',
     colSort: ['user', 'age', 'desc'],
   },
 

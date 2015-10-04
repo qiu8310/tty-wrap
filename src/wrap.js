@@ -1,5 +1,6 @@
 import ttyText from 'tty-text';
 import punycode from 'punycode';
+import {detected} from './detectSize';
 
 import os from 'os';
 
@@ -244,8 +245,9 @@ function wrap(text, opts = {}) {
   opts.height = opts.height || Infinity;
   opts.ellipsis = opts.ellipsis || ' ...';
   opts.prefix = opts.prefix || '';
-  opts.tabsize = opts.tabsize || 8;
-  opts.ambsize = opts.ambsize === 2 ? 2 : 1;
+  opts.tabsize = opts.tabsize || detected.tabsize || 8;
+  opts.ambsize = opts.ambsize || detected.ambsize || 1;
+  if (opts.ambsize !== 2) opts.ambsize = 1; // 只能是 2 和 1
   opts.ellipsisSize = ttyText.size(opts.ellipsis, opts.ambsize);
 
   let block = new Block(text, opts);

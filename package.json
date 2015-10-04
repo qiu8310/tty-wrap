@@ -1,11 +1,12 @@
 {
   "name": "tty-wrap",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Wrap text on terminal, support East Asian Character, Combinint Marks and Surrogate Pairs.",
-  "main": "src/wrap.js",
+  "main": "build/index.js",
   "scripts": {
     "cover": "rm -rf ./coverage && istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec --compilers js:babel/register test/test-*",
-    "test": "mocha --compilers js:babel/register test/test-*"
+    "test": "mocha --compilers js:babel/register test/test-*",
+    "build": "babel src -d build && echo '{}' > data/cache.json"
   },
   "repository": {
     "type": "git",
@@ -21,7 +22,7 @@
     "unicode",
     "East Asian",
     "Combining Marks",
-    "Surrogate Pairs"
+    "Surrogate Pairs",
     "charaset"
   ],
   "author": "Mora",

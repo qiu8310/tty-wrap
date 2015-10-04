@@ -18,10 +18,76 @@
 >
 
 
+**已知问题：**
+
+* border 中的 `single` 和 `dobule` 使用的字符都是 Ambiguous 字符，所以在某些系统上看上去边框会过宽，所以尽量使用 `simple` 的边框
+
+* 如果 text 内容中使用了 Ambiguous 字符的话，建议在程序最后执行 `wrap.detectSize()`，它会检查当前终端的 Ambiguous 字符的宽度，并缓存下来，下次使用时直接用缓存的，所以第一次看上去不正常，但下一次就正常了，并且 `detectSize` 每个月才会运行一次。但如果你没使用 Ambiguous 字符，则无需这么麻烦。**另外我在寻找一个更好的方法可以直接获取当前终端上的 Ambiguous 字符的大小，而不要找这个弯路**
+
+
 ## Usage
 
 
+```js
+
+wrap.table(
+  [
+    {age: 4, user: '\u2661 \u2661 \u2661 \u2661', desc: 'abcd'},
+    {age: 20, user: chalk.bgGreen('中华人民共合国'), desc: '这里是很长的内容这里是很长的内容这里是很长的内容这里是很长的的内容这里是很长的内容内容这里是很长的的内容这里是很长的内容内容这里是很长的的内容这里是很长的内容'}
+  ],
+
+  {
+    left: 10,
+    showHead: true,
+    showLead: true,
+    leadHead: 'Perple',
+    lead: ['1', '2'],
+    showLeadOnRight: false,
+    border: 'single',
+    colSort: ['user', 'age', 'desc'],
+  },
+
+  {
+    colB: {
+      paddingRight: 5,
+    },
+    rowA: {
+      color: 'bgBlue'
+    },
+    colA: {
+      color: 'bgMagenta',
+      align: 'center',
+      vertical: 'middle'
+    },
+    cellAA: {
+      color: 'red.bold.bgCyan'
+    },
+    cellLastALastA: {
+      width: 50,
+      color: 'bgWhite.black'
+    }
+  }
+)
+```
+
+
 ## API
+
+### 直接导出下下面的变量
+
+**模块**
+
+- `tt`: `tty-text` 模块
+- `ts`: `tty-size` 模块
+- `chalk`: `chalk` 模块
+
+**ANSI常量**
+
+- `ANSI_REGEXP`
+- `REST_SRG`
+- `CSI`
+- `ESC`
+
 
 ### wrap.table(data, opts, style);
 
@@ -122,47 +188,7 @@
 * [`wrap.tabel` example](./examples/ex-table.js);
 
 
-```js
 
-table(
-  [
-    {age: 4, user: '\u2661 \u2661 \u2661 \u2661', desc: 'abcd'},
-    {age: 20, user: chalk.bgGreen('中华人民共合国'), desc: '这里是很长的内容这里是很长的内容这里是很长的内容这里是很长的的内容这里是很长的内容内容这里是很长的的内容这里是很长的内容内容这里是很长的的内容这里是很长的内容'}
-  ],
-
-  {
-    left: 10,
-    showHead: true,
-    showLead: true,
-    leadHead: 'Perple',
-    lead: ['1', '2'],
-    showLeadOnRight: false,
-    border: 'single',
-    colSort: ['user', 'age', 'desc'],
-  },
-
-  {
-    colB: {
-      paddingRight: 5,
-    },
-    rowA: {
-      color: 'bgBlue'
-    },
-    colA: {
-      color: 'bgMagenta',
-      align: 'center',
-      vertical: 'middle'
-    },
-    cellAA: {
-      color: 'red.bold.bgCyan'
-    },
-    cellLastALastA: {
-      width: 50,
-      color: 'bgWhite.black'
-    }
-  }
-)
-```
 
 
 

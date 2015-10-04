@@ -6,9 +6,9 @@ import ttySize from 'tty-size';
 function _cellOptsCheck(opts) {
   let winSize = ttySize(); // 每次都重复计算，因为用户可以手动调整屏幕大小
 
-  // 参数
-  opts.tabsize = opts.tabsize || 8;
-  opts.ambsize = opts.ambsize || 1;
+  // 参数 自动从 detected 中获取，如果设置了默认的，则无法从 detected 中获取
+  // opts.tabsize = opts.tabsize || 8;
+  // opts.ambsize = opts.ambsize || 1;
 
   ['left', 'right', 'width'].forEach((k, i) => {
     let v = opts[k];

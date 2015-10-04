@@ -21,22 +21,30 @@ let detected = {tabsize: client.tabsize || 8, ambsize: client.ambsize || 1};
  * Detect tab size and ambiguous character size, and cache them in local file.
  *
  * WARN: After executed, do not output anything before the `cb` is called.
- * @param {Function} cb - callback function, get `{tabsize, ambsize}` as second paramater.
+ * @param {Number} [expired] - expired after last detected.
+ * @param {Function} [cb] - callback function, get `{tabsize, ambsize}` as second paramater.
  */
-function detectSize(cb) {
+function detectSize(expired, cb) {
   let keys = Object.keys(detectables);
+  if (typeof expired === 'function') [cb, expired] = [expired, cb];
+
+  expired = expired || 1000 * 3600 * 24 * 30; // 默认，一个月一次就行
   cb = typeof cb === 'function' ? cb : () => {};
 
-  ttyText.detectEach(keys.map(k => detectables[k]).join(''), (err, chars) => {
-    if (err) return cb(err);
-    keys.forEach((k, i) => {
-      detected[k] = chars[i].size;
+  if (client.timestamp && Date.now() - client.timestamp < expired) {
+    cb(new Error('NOT_EXPIRED'));
+  } else {
+    ttyText.detectEach(keys.map(k => detectables[k]).join(''), (err, chars) => {
+      if (err) return cb(err);
+      keys.forEach((k, i) => {
+        detected[k] = chars[i].size;
+      });
+      cache[clientName] = detected;
+      cache[clientName].timestamp = Date.now();
+      fs.writeFileSync(cacheFile, JSON.stringify(cache));
+      cb(null, detected);
     });
-    cache[clientName] = detected;
-    cache.timestamp = Date.now();
-    fs.writeFileSync(cacheFile, JSON.stringify(cache));
-    cb(null, detected);
-  });
+  }
 }
 
 export default { detectSize, detected };
