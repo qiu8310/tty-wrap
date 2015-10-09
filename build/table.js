@@ -77,6 +77,10 @@ function _d4(padding, s) {
   return { top: top, right: right, bottom: bottom, left: left };
 }
 
+function _cap(str) {
+  return str[0].toUpperCase() + str.slice(1);
+}
+
 function _checkBorder(opts) {
   var chars = defaultChars.simple;
   opts.borderColor = opts.borderColor || 'gray';
@@ -153,6 +157,7 @@ function _makeTableData(data, opts) {
   lead = rows.map(function (r) {
     return r.label;
   });
+  opts.lead = lead;
 
   var headKeys = leadKeys.length ? Object.keys(data[leadKeys[0]]) : [];
   if (head && head.length) {
@@ -172,6 +177,7 @@ function _makeTableData(data, opts) {
   head = cols.map(function (c) {
     return c.label;
   });
+  opts.head = head;
 
   data = [];
 
@@ -191,7 +197,11 @@ function _makeTableData(data, opts) {
       head[method](leadHead);
     })();
   }
-  if (opts.showHead) data[opts.showHeadOnBottom ? 'push' : 'unshift'](head);
+  if (opts.showHead) {
+    var method = opts.showHeadOnBottom ? 'push' : 'unshift';
+    data[method](head);
+    lead[method](leadHead);
+  }
 
   return data;
 }
@@ -204,6 +214,16 @@ function _getCommonStyle(style) {
   return common;
 }
 
+/**
+ * cell/row/col
+ * dataCell/dataRow/dataCol
+ * oddRow/evenRow/oddCol/evenCol
+ * rowA/rowB.../colA/colB...
+ * rowLastA/rowLastB.../colLastA/colLastB...
+ * row1/row2/...colUser/colAge/colDesc...
+ * head/lead
+ * cellAB/cellLastAB/cellALastB/cellLastALastB/...
+ */
 function _caculateCellStyle(i, j, val, rowCount, colCount, opts, common, style) {
   var isOddRow = i % 2,
       isOddCol = j % 2;
@@ -216,7 +236,19 @@ function _caculateCellStyle(i, j, val, rowCount, colCount, opts, common, style) 
   var rowLastAlpah = 'Last' + String.fromCharCode(64 + rowCount - i),
       colLastAplha = 'Last' + String.fromCharCode(64 + colCount - j);
 
-  var styles = [isOddRow ? 'oddRow' : 'evenRow', isOddCol ? 'oddCol' : 'evenCol', 'row' + rowAlpha, 'col' + colAlpha, 'row' + rowLastAlpah, 'col' + colLastAplha, isHead && 'head', isLead && 'lead', 'cell' + rowAlpha + colAlpha, 'cell' + rowLastAlpah + colAlpha, 'cell' + rowAlpha + colLastAplha, 'cell' + rowLastAlpah + colLastAplha].filter(function (k) {
+  var styles = ['cell', 'row', 'col'];
+  if (!isHead && !isLead) styles.push('dataCell', 'dataRow', 'dataCol');
+
+  styles.push(isOddRow ? 'oddRow' : 'evenRow', isOddCol ? 'oddCol' : 'evenCol', 'row' + rowAlpha, 'col' + colAlpha, 'row' + rowLastAlpah, 'col' + colLastAplha);
+
+  var leadKey = opts.lead[i].toString();
+  var headKey = opts.head[j].toString();
+
+  if (leadKey) styles.push('row' + _cap(leadKey));
+  if (headKey) styles.push('col' + _cap(headKey));
+
+  styles.push(isHead && 'head', isLead && 'lead', 'cell' + rowAlpha + colAlpha, 'cell' + rowLastAlpah + colAlpha, 'cell' + rowAlpha + colLastAplha, 'cell' + rowLastAlpah + colLastAplha);
+  styles = styles.filter(function (k) {
     return k && style[k];
   }).map(function (k) {
     return style[k];
@@ -393,7 +425,14 @@ function _formatCell(c, s, maxWidth, maxHeight) {
  *
  *   **样式组**
  *
- *   - row, col, odd/evenRow/Col, row/colA/B.., row/colLastA/B, head, lead, cellAA, cellAB...
+ *     cell/row/col
+ *     dataCell/dataRow/dataCol
+ *     oddRow/evenRow/oddCol/evenCol
+ *     rowA/rowB.../colA/colB...
+ *     rowLastA/rowLastB.../colLastA/colLastB...
+ *     row1/row2/...colUser/colAge/colDesc...
+ *     head/lead
+ *     cellAB/cellLastAB/cellALastB/cellLastALastB/...
  *
  */
 function table(data) {

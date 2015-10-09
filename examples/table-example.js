@@ -12,7 +12,7 @@ table(
     left: 10,
     showHead: true,
     showLead: true,
-    leadHead: 'Perple',
+    leadHead: 'People',
     lead: ['1', '2'],
     showLeadOnRight: false,
     border: 'simple',
@@ -21,13 +21,13 @@ table(
   },
 
   {
-    colB: {
+    colUser: {
       paddingRight: 5,
     },
     rowA: {
       color: 'bgBlue'
     },
-    colA: {
+    colPeople: {
       color: 'bgMagenta',
       align: 'center',
       vertical: 'middle'

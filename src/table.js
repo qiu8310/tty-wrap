@@ -58,6 +58,10 @@ function _d4(padding, s) {
   return {top, right, bottom, left};
 }
 
+function _cap(str) {
+  return str[0].toUpperCase() + str.slice(1);
+}
+
 
 function _checkBorder(opts) {
   let chars = defaultChars.simple;
@@ -115,6 +119,7 @@ function _makeTableData(data, opts) {
   if (rowFilter) rows = _applyFilter(rowFilter, rows);
   if (rowSort) rows = _applySort(rowSort, rows);
   lead = rows.map(r => r.label);
+  opts.lead = lead;
 
   let headKeys = leadKeys.length ? Object.keys(data[leadKeys[0]]) : [];
   if (head && head.length) {
@@ -128,6 +133,7 @@ function _makeTableData(data, opts) {
   if (colFilter) cols = _applyFilter(colFilter, cols);
   if (colSort) cols = _applySort(colSort, cols);
   head = cols.map(c => c.label);
+  opts.head = head;
 
   data = [];
 
@@ -144,7 +150,11 @@ function _makeTableData(data, opts) {
     data.forEach((row, i) => row[method](lead[i]));
     head[method](leadHead);
   }
-  if (opts.showHead) data[opts.showHeadOnBottom ? 'push' : 'unshift'](head);
+  if (opts.showHead) {
+    let method = opts.showHeadOnBottom ? 'push' : 'unshift';
+    data[method](head);
+    lead[method](leadHead);
+  }
 
   return data;
 }
@@ -157,6 +167,16 @@ function _getCommonStyle(style) {
   return common;
 }
 
+/**
+ * cell/row/col
+ * dataCell/dataRow/dataCol
+ * oddRow/evenRow/oddCol/evenCol
+ * rowA/rowB.../colA/colB...
+ * rowLastA/rowLastB.../colLastA/colLastB...
+ * row1/row2/...colUser/colAge/colDesc...
+ * head/lead
+ * cellAB/cellLastAB/cellALastB/cellLastALastB/...
+ */
 function _caculateCellStyle(i, j, val, rowCount, colCount, opts, common, style) {
   let isOddRow = i % 2, isOddCol = j % 2;
   let isLastRow = i === rowCount - 1, isLastCol = j === colCount - 1;
@@ -166,14 +186,27 @@ function _caculateCellStyle(i, j, val, rowCount, colCount, opts, common, style) 
   let rowLastAlpah = 'Last' + String.fromCharCode(64 + rowCount - i),
     colLastAplha = 'Last' + String.fromCharCode(64 + colCount - j);
 
-  let styles = [
+  let styles = ['cell', 'row', 'col'];
+  if (!isHead && !isLead) styles.push('dataCell', 'dataRow', 'dataCol');
+
+  styles.push(
     isOddRow ? 'oddRow' : 'evenRow', isOddCol ? 'oddCol' : 'evenCol',
     'row' + rowAlpha, 'col' + colAlpha,
-    'row' + rowLastAlpah, 'col' + colLastAplha,
+    'row' + rowLastAlpah, 'col' + colLastAplha
+  );
+
+  let leadKey = opts.lead[i].toString();
+  let headKey = opts.head[j].toString();
+
+  if (leadKey) styles.push('row' + _cap(leadKey));
+  if (headKey) styles.push('col' + _cap(headKey));
+
+  styles.push(
     isHead && 'head', isLead && 'lead',
     'cell' + rowAlpha + colAlpha, 'cell' + rowLastAlpah + colAlpha, 'cell' + rowAlpha + colLastAplha,
     'cell' + rowLastAlpah + colLastAplha
-  ].filter(k => k && style[k]).map(k => style[k]);
+  );
+  styles = styles.filter(k => k && style[k]).map(k => style[k]);
 
   let s = _getCommonStyle(Object.assign({}, common, ...styles));
 
@@ -338,7 +371,14 @@ function _formatCell(c, s, maxWidth, maxHeight) {
  *
  *   **样式组**
  *
- *   - row, col, odd/evenRow/Col, row/colA/B.., row/colLastA/B, head, lead, cellAA, cellAB...
+ *     cell/row/col
+ *     dataCell/dataRow/dataCol
+ *     oddRow/evenRow/oddCol/evenCol
+ *     rowA/rowB.../colA/colB...
+ *     rowLastA/rowLastB.../colLastA/colLastB...
+ *     row1/row2/...colUser/colAge/colDesc...
+ *     head/lead
+ *     cellAB/cellLastAB/cellALastB/cellLastALastB/...
  *
  */
 function table(data, opts = {}, style = {}) {

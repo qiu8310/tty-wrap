@@ -140,13 +140,14 @@ wrap.table(
 
 **另外可以指定某一行或某一列或某个 cell 的样式，通过下面的组合，注意，越下优先级越高**
 
-* row/col
-* oddRow/oddCol/evenRow/evenCol/
-* rowA/rowB/...rowZ, colA/colB/...colZ
-* rowLastA/rowLastB..., colLastA...
-* head/lead
-* cellAA/cellAB
-* cellLastAA/cellLastALastB/...
+ * cell/row/col
+ * dataCell/dataRow/dataCol
+ * oddRow/evenRow/oddCol/evenCol
+ * rowA/rowB.../colA/colB...
+ * rowLastA/rowLastB.../colLastA/colLastB...
+ * row0/row1/...colUser/colAge/colDesc... (0.0.5 新增，根据行列的名称来定位)
+ * head/lead
+ * cellAB/cellLastAB/cellALastB/cellLastALastB/...
 
 
 ### wrap.cell(text, opts);
