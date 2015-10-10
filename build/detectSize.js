@@ -20,13 +20,17 @@ var _fs2 = _interopRequireDefault(_fs);
 
 // \v[0x0B] \f[0x0C] 就不处理了，它们也会影响布局
 var detectables = {
-  tabsize: '\t',
+  // tabsize: '\t', // 更新过 tty-text 的 detect 算法，使得 detect tabsize 不准确了，但其它字符都很准确
   ambsize: '♡'
 };
 
 var cacheFile = _path2['default'].join(__dirname, '../data/cache.json');
 
-var cache = JSON.parse(_fs2['default'].readFileSync(cacheFile).toString());
+var cache = {};
+try {
+  cache = JSON.parse(_fs2['default'].readFileSync(cacheFile).toString());
+} catch (e) {}
+
 var clientName = process.env.TERM_PROGRAM || 'unknown';
 var client = cache[clientName] || {};
 var detected = { tabsize: client.tabsize || 8, ambsize: client.ambsize || 1 };

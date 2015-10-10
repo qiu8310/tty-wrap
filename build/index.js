@@ -18,8 +18,6 @@ var _cell = require('./cell');
 
 var _cell2 = _interopRequireDefault(_cell);
 
-var _detectSize = require('./detectSize');
-
 var _ttyText = require('tty-text');
 
 var _ttyText2 = _interopRequireDefault(_ttyText);
@@ -40,7 +38,6 @@ _wrap2['default'].chalk = _chalk2['default'];
 
 _wrap2['default'].table = _table2['default'];
 _wrap2['default'].cell = _cell2['default'];
-_wrap2['default'].detectSize = _detectSize.detectSize;
 
 exports['default'] = _wrap2['default'];
 module.exports = exports['default'];

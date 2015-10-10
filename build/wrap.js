@@ -33,7 +33,7 @@ var ANSI_REGEXP = /[\u001b\u009b]([[()#;?]*)([0-9]{1,4}(?:;[0-9]{0,4})*)?([0-9A-
 
 // ANSI ESCAPE CODE
 // Refer: https://en.wikipedia.org/wiki/ANSI_escape_code
-var ESC = '\u001b';
+var ESC = '\x1B';
 var CSI = ESC + '[';
 var REST_SRG = CSI + 'm';
 
@@ -131,8 +131,8 @@ var Row = (function () {
           c = undefined;
       var height = opts.height;
       var createRow = function createRow() {
-        var startColor = arguments[0] === undefined ? '' : arguments[0];
-        var prefix = arguments[1] === undefined ? 0 : arguments[1];
+        var startColor = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+        var prefix = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 
         height--;
         var r = { str: ' '.repeat(prefix), startColor: startColor, size: prefix };
@@ -159,7 +159,7 @@ var Row = (function () {
           var symbol = c.symbol;
 
           // 特殊字符特殊处理
-          if (symbol === '\u000b' || symbol === '\f') {
+          if (symbol === '\v' || symbol === '\f') {
             recoverAnsi(c);
 
             if (height) {
@@ -222,6 +222,8 @@ var Row = (function () {
             }
           }
         }
+
+        // 最后一个字符的未尾也要恢复颜色
       } catch (err) {
         _didIteratorError = true;
         _iteratorError = err;
@@ -237,7 +239,6 @@ var Row = (function () {
         }
       }
 
-      // 最后一个字符的未尾也要恢复颜色
       if (row && c) recoverAnsi(c, true);
 
       return rows;
@@ -265,6 +266,23 @@ var Block = (function () {
       return new Row(str, ansis, opts);
     });
   }
+
+  /**
+   *
+   * @param {String} text 要 wrap 的文本
+   * @param {Object} opts 配置选项
+   *
+   *    - width         {Number}  限制字符串宽度（默认为 0， 不限制）
+   *    - height        {Number}  限制字符串的高度（默认为 0，不限制）
+   *    - tabsize       {Number}  指定 \t 的大小，（默认是 8）
+   *    - ambsize       {Number}  指定 ambiguous character width ，（默认是 1，可选值是 1、2）
+   *    - prefix        {prefix}  在每行添加一个前缀
+   *    - fill          {Boolean} 是否要填平空白的区域
+   *    - inheritColor  {Boolean} 是否要继承上一行的颜色
+   *    - ellipsis      {String}  如果超出了宽度和高度就在最后加上此字段（默认为 ' ...'）
+   *
+   * @return {{text:String, col:Number, row:Number}}
+   */
 
   _createClass(Block, [{
     key: 'wrap',
@@ -325,24 +343,8 @@ var Block = (function () {
   return Block;
 })();
 
-/**
- *
- * @param {String} text 要 wrap 的文本
- * @param {Object} opts 配置选项
- *
- *    - width         {Number}  限制字符串宽度（默认为 0， 不限制）
- *    - height        {Number}  限制字符串的高度（默认为 0，不限制）
- *    - tabsize       {Number}  指定 \t 的大小，（默认是 8）
- *    - ambsize       {Number}  指定 ambiguous character width ，（默认是 1，可选值是 1、2）
- *    - prefix        {prefix}  在每行添加一个前缀
- *    - fill          {Boolean} 是否要填平空白的区域
- *    - inheritColor  {Boolean} 是否要继承上一行的颜色
- *    - ellipsis      {String}  如果超出了宽度和高度就在最后加上此字段（默认为 ' ...'）
- *
- * @return {{text:String, col:Number, row:Number}}
- */
 function wrap(text) {
-  var opts = arguments[1] === undefined ? {} : arguments[1];
+  var opts = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
   opts.width = opts.width || Infinity;
   opts.height = opts.height || Infinity;

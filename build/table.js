@@ -320,8 +320,8 @@ function _caculateTableContent(data, style, maxRowHeights, maxColWidths, opts) {
       if (opts.width && j === autoWrapOnCol) {
         row.push(''); // 传个假数据去占位，之后再修改回来
       } else {
-        row.push(max(i, j));
-      }
+          row.push(max(i, j));
+        }
     }
     content.push(row);
   }
@@ -436,8 +436,8 @@ function _formatCell(c, s, maxWidth, maxHeight) {
  *
  */
 function table(data) {
-  var opts = arguments[1] === undefined ? {} : arguments[1];
-  var style = arguments[2] === undefined ? {} : arguments[2];
+  var opts = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+  var style = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 
   _checkBorder(opts);
   _helper2['default'].checkLRW(opts);

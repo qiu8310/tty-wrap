@@ -34,7 +34,7 @@ var _helper2 = _interopRequireDefault(_helper);
  *
  */
 function cell(text) {
-  var opts = arguments[1] === undefined ? {} : arguments[1];
+  var opts = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
   // 参数 自动从 detected 中获取，如果设置了默认的，则无法从 detected 中获取
   // opts.tabsize = opts.tabsize || 8;
