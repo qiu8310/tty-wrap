@@ -246,7 +246,7 @@ function wrap(text, opts = {}) {
   opts.height = opts.height || Infinity;
   opts.ellipsis = opts.ellipsis || ' ...';
   opts.prefix = opts.prefix || '';
-  opts.tabsize = opts.tabsize || detected.tabsize || 8;
+  opts.tabsize = opts.tabsize || 8;
   opts.ellipsisSize = ttyTextSize(opts.ellipsis, opts);
 
   let block = new Block(text, opts);
