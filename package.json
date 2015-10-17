@@ -9,7 +9,9 @@
     "build": "babel -e 0 src -d build"
   },
   "files": [
-    "build/", "README.md", "res.png"
+    "build/",
+    "README.md",
+    "res.png"
   ],
   "repository": {
     "type": "git",
@@ -43,6 +45,6 @@
     "chalk": "^1.1.1",
     "es6-shim": "^0.33.6",
     "tty-size": "^1.0.0",
-    "tty-text": "^1.0.1"
+    "tty-text-size": "^1.0.0"
   }
 }

@@ -1,8 +1,7 @@
 require('es6-shim');
 
-import ttyText from 'tty-text';
+import ttyTextSize from 'tty-text-size';
 import punycode from 'punycode';
-import {detected} from './detectSize';
 
 import os from 'os';
 
@@ -24,7 +23,7 @@ function codePointSize(codePoint, opts) {
   if (codePoint === 9) return opts.tabsize;
   if (codePoint === 11 || codePoint === 12) return opts.width + 2; // 保证会触发换行就行了
 
-  return ttyText.codePointSize(codePoint, opts.ambsize);
+  return ttyTextSize(codePoint, opts);
 }
 
 class Ansi {
@@ -60,7 +59,7 @@ class Row {
     let diff = 0;
     this.chars = punycode.ucs2.decode(str).map((codePoint, index) => {
       index += diff; // 保留非 unicode 时的索引，用于恢复之前的 ansi 字符
-      diff += ttyText.isSurrogatePairsChar(codePoint) ? 1 : 0;
+      diff += codePoint > 0xFFFF ? 1 : 0; // 大于 0xFFFF 的字符属于 Surrogate Pairs
       return new Char(codePoint, index, opts);
     });
   }
@@ -234,7 +233,7 @@ class Block {
  *    - width         {Number}  限制字符串宽度（默认为 0， 不限制）
  *    - height        {Number}  限制字符串的高度（默认为 0，不限制）
  *    - tabsize       {Number}  指定 \t 的大小，（默认是 8）
- *    - ambsize       {Number}  指定 ambiguous character width ，（默认是 1，可选值是 1、2）
+ *    - ambsize       {Number}  指定 ambiguous character width，透传给 tty-text-size 用的
  *    - prefix        {prefix}  在每行添加一个前缀
  *    - fill          {Boolean} 是否要填平空白的区域
  *    - inheritColor  {Boolean} 是否要继承上一行的颜色
@@ -248,9 +247,7 @@ function wrap(text, opts = {}) {
   opts.ellipsis = opts.ellipsis || ' ...';
   opts.prefix = opts.prefix || '';
   opts.tabsize = opts.tabsize || detected.tabsize || 8;
-  opts.ambsize = opts.ambsize || detected.ambsize || 1;
-  if (opts.ambsize !== 2) opts.ambsize = 1; // 只能是 2 和 1
-  opts.ellipsisSize = ttyText.size(opts.ellipsis, opts.ambsize);
+  opts.ellipsisSize = ttyTextSize(opts.ellipsis, opts);
 
   let block = new Block(text, opts);
   return block.wrap(opts);
