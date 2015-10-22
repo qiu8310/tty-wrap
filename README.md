@@ -79,8 +79,8 @@ wrap.table(
 
 **模块**
 
-- `tt`: `tty-text` 模块
-- `ts`: `tty-size` 模块
+- `ttyTextSize`: `tty-text-size` 模块
+- `ttySize`: `tty-size` 模块
 - `chalk`: `chalk` 模块
 
 **ANSI常量**
@@ -203,6 +203,13 @@ wrap.table(
 
 
 
+## Other Similar Packages
+
+* [columnify](https://www.npmjs.com/package/columnify) | [repo](https://github.com/timoxley/columnify) : [Used by npm](https://github.com/npm/npm/pull/2328/)
+* [cli-table](https://www.npmjs.com/package/cli-table) | [repo](https://github.com/Automattic/cli-table)
+* [cli-table-cjk](https://www.npmjs.com/package/cli-table-cjk)
+* [gracelog](https://www.npmjs.com/package/gracelog) | [repo](https://github.com/voltrue2/gracelog)
+* [wcwidth](https://www.npmjs.com/package/wcwidth) | [repo](https://github.com/timoxley/wcwidth)
 
 
 
