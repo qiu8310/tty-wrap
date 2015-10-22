@@ -284,7 +284,7 @@ function _caculateTableContent(data, style, maxRowHeights, maxColWidths, opts) {
 
   if (opts.width && autoWrapOnCol >= 0 && autoWrapOnCol < columns) {
     let width = opts.width - 1 - (opts.border ? columns + 1 : 0);
-    data.forEach((d, i) => { width -= maxColWidths[i] || 0; });
+    maxColWidths.forEach(w => { width -= w || 0; });
     for (let i = 0; i < data.length; i++) {
       content[i][autoWrapOnCol] = max(i, autoWrapOnCol, width);
     }
