@@ -1,6 +1,6 @@
 {
   "name": "tty-wrap",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Wrap text on terminal, support East Asian Character, Combinint Marks and Surrogate Pairs.",
   "main": "build/index.js",
   "scripts": {

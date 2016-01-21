@@ -4,7 +4,13 @@ import ttySize from 'tty-size';
 // 确保它们之和小于屏幕
 // 只要指定了 right 或者 width 都会触发 wrap，否则不 wrap
 function checkLRW(opts) {
-  let winSize = ttySize(); // 每次都重复计算，因为用户可以手动调整屏幕大小
+  let winSize;
+  try {
+    winSize = ttySize(); // 每次都重复计算，因为用户可以手动调整屏幕大小
+  } catch (e) {
+    winSize = {width: 80, height: 35};
+  }
+
   let rightInOpts = 'right' in opts; // 备份下
 
   ['left', 'right', 'width'].forEach((k, i) => {
