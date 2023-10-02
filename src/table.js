@@ -1,7 +1,5 @@
 /*eslint no-loop-func: 0*/
 
-require('es6-shim');
-
 import wrap from './wrap';
 import helper from './helper';
 import chalk from 'chalk';
@@ -61,7 +59,6 @@ function _d4(padding, s) {
 function _cap(str) {
   return str[0].toUpperCase() + str.slice(1);
 }
-
 
 function _checkBorder(opts) {
   let chars = defaultChars.simple;
@@ -449,4 +446,3 @@ function _borderRow(v, chars, maxColWidths) {
 }
 
 export default table;
-

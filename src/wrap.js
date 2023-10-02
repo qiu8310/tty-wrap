@@ -1,5 +1,3 @@
-require('es6-shim');
-
 import ttyTextSize from 'tty-text-size';
 import punycode from 'punycode';
 
@@ -260,8 +258,3 @@ wrap.CSI = CSI;
 wrap.ESC = ESC;
 
 export default wrap;
-
-
-
-
-

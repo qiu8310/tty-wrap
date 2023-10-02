@@ -1,5 +1,3 @@
-require('es6-shim');
-
 import wrap from './wrap';
 import table from './table';
 import cell from './cell';
